@@ -36,7 +36,7 @@
         <dependency>
             <groupId>com.github.JulianDev24.EasyInject</groupId>
             <artifactId>easyinjector-core</artifactId>
-            <version>1.0.0</version>
+            <version>develop-db5a6d77de-1</version>
             <scope>compile</scope>
         </dependency>
         <!-- lombok -->

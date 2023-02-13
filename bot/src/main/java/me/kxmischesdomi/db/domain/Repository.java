@@ -49,7 +49,7 @@ public abstract class Repository<ValueType extends Model> {
         return this.createQuery().stream().toList();
     }
 
-    protected Query<ValueType> createQuery() {
+    public Query<ValueType> createQuery() {
         return this.datastore.find(this.entityClazz);
     }
 }

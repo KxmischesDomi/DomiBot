@@ -14,13 +14,10 @@ import me.kxmischesdomi.db.domain.Model;
 @AllArgsConstructor
 @NoArgsConstructor(force = true)
 @ToString(callSuper = true)
-@Entity(useDiscriminator = false)
-@Indexes({
-        @Index(options = @IndexOptions(unique = true), fields = {
-                @Field("userId")
-        })
-})
+@Entity(value = "members", useDiscriminator = false)
 public class MemberModel extends Model {
+
+    private long guildId;
 
     private long userId;
 

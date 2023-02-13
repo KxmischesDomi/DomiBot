@@ -30,8 +30,6 @@ public class GuildModel extends Model {
 
     private LevelingModel guildLevelingProfile;
 
-    // private ... guildMembers
-
     @PrePersist
     public void prePersist() {
         super.prePersist();

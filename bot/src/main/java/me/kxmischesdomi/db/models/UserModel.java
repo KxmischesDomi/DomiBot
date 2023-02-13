@@ -30,7 +30,7 @@ public class UserModel extends Model {
 
     private String cachedAvatarURL;
 
-    private LevelingModel globalLevelingProfile;
+    private LevelingModel userLevelingProfile;
 
     @PrePersist
     public void prePersist() {

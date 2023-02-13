@@ -13,7 +13,6 @@ public class Main {
 			new DomiBot();
 		} catch (Exception exception) {
 			exception.printStackTrace();
-			System.err.println("Caught error. Terminating...");
 		}
 	}
 

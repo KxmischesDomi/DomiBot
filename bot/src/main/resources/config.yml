@@ -1,0 +1,13 @@
+
+version: "1.0"
+support: "https://discord.gg/v6zzCk8"
+website: "https://kxmischesdomi.me"
+invite: "https://discord.com/api/oauth2/authorize?client_id=1074725355048423516&permissions=8&scope=bot"
+token: "SECRET"
+
+morphiaConfig:
+  host: "127.0.0.1"
+  port: 27017
+  database: ""
+  username: ""
+  password: ""

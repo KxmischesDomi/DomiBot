@@ -14,23 +14,20 @@ import me.kxmischesdomi.db.domain.Model;
 @AllArgsConstructor
 @NoArgsConstructor(force = true)
 @ToString(callSuper = true)
-@Entity(value = "users", useDiscriminator = false)
+@Entity(useDiscriminator = false)
 @Indexes({
         @Index(options = @IndexOptions(unique = true), fields = {
                 @Field("userId")
         })
 })
-public class UserModel extends Model {
+public class MemberModel extends Model {
 
     private long userId;
 
-    private String cachedName;
+    private LevelingModel memberLevelingModel;
 
-    private String cachedDiscriminator;
-
-    private String cachedAvatarURL;
-
-    private LevelingModel globalLevelingProfile;
+    @Reference
+    private UserModel userModel;
 
     @PrePersist
     public void prePersist() {

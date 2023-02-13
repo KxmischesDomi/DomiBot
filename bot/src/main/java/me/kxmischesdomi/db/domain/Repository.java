@@ -9,6 +9,10 @@ import org.bson.types.ObjectId;
 import java.util.List;
 import java.util.Optional;
 
+/**
+ * @author KxmischesDomi | https://github.com/kxmischesdomi
+ * @since 1.0
+ */
 public abstract class Repository<ValueType extends Model> {
 
     private final Class<ValueType> entityClazz;

@@ -1,5 +1,7 @@
 package me.kxmischesdomi;
 
+import me.kxmischesdomi.bot.DomiBot;
+
 /**
  * @author KxmischesDomi | https://github.com/kxmischesdomi
  * @since 1.0

@@ -53,4 +53,5 @@ public class CommonModule extends AbstractModule {
     public MorphiaConfig provideConfig() {
         return this.morphiaConfig;
     }
+
 }

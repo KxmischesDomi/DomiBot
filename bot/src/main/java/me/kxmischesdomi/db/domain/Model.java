@@ -7,6 +7,10 @@ import org.bson.types.ObjectId;
 
 import java.util.Date;
 
+/**
+ * @author KxmischesDomi | https://github.com/kxmischesdomi
+ * @since 1.0
+ */
 @ToString
 @Getter
 @Setter

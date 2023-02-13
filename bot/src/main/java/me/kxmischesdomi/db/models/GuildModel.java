@@ -14,23 +14,23 @@ import me.kxmischesdomi.db.domain.Model;
 @AllArgsConstructor
 @NoArgsConstructor(force = true)
 @ToString(callSuper = true)
-@Entity(value = "users", useDiscriminator = false)
+@Entity(value = "guilds", useDiscriminator = false)
 @Indexes({
         @Index(options = @IndexOptions(unique = true), fields = {
-                @Field("userId")
+                @Field("guildId")
         })
 })
-public class UserModel extends Model {
+public class GuildModel extends Model {
 
-    private long userId;
+    private long guildId;
 
     private String cachedName;
 
-    private String cachedDiscriminator;
+    private String cachedIconURL;
 
-    private String cachedAvatarURL;
+    private LevelingModel guildLevelingProfile;
 
-    private LevelingModel globalLevelingProfile;
+    // private ... guildMembers
 
     @PrePersist
     public void prePersist() {

@@ -1,5 +1,7 @@
 package me.kxmischesdomi.web;
 
+import com.google.gson.JsonArray;
+import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import io.javalin.Javalin;
 import io.javalin.vue.VueComponent;
@@ -8,11 +10,15 @@ import me.kxmischesdomi.DomiBot;
 import me.kxmischesdomi.config.Config;
 import me.kxmischesdomi.db.models.UserModel;
 import me.kxmischesdomi.db.models.WebClientModel;
+import net.dv8tion.jda.api.Permission;
 import org.bson.BsonDocument;
 import org.bson.BsonString;
 import xyz.juliandev.easy.annotations.Inject;
 
+import java.util.Comparator;
 import java.util.HashMap;
+import java.util.List;
+import java.util.stream.Collectors;
 
 /**
  * @author KxmischesDomi | https://github.com/kxmischesdomi
@@ -52,10 +58,25 @@ public class WebApp {
 				HashMap<String, String> map = new HashMap<>();
 				return map;
 			};
+		 	javalinConfig.accessManager((handler, context, permittedRoles) -> {
+		 		if (permittedRoles.contains(Role.ANYONE)) {
+		 			handler.handle(context);
+				} else if (permittedRoles.contains(Role.LOGGED_IN) && context.cookie("token") != null) {
+		 			handler.handle(context);
+				} else {
+//		 			context.status(401).header(Header.WWW_AUTHENTICATE, "Basic");
+					context.redirect("/login");
+				}
+			});
 		 }).start(config.getWebConfig().getHost(), config.getWebConfig().getPort());
 
-		 javalin.get("/", new VueComponent("home"));
-		 javalin.get("/dashboard", new VueComponent("dashboard"));
+		 javalin.get("/", new VueComponent("home"), Role.ANYONE);
+		 javalin.get("/dashboard", new VueComponent("dashboard"), Role.LOGGED_IN);
+
+		 javalin.get("/logout", ctx -> {
+		 	ctx.removeCookie("token");
+		 	ctx.redirect("/");
+		 }, Role.ANYONE);
 
 		 javalin.get("/login", ctx -> {
 			 String token = ctx.cookie("token");
@@ -64,12 +85,12 @@ public class WebApp {
 			 } else {
 			 	ctx.redirect("/dashboard");
 			 }
-		 });
+		 }, Role.ANYONE);
 
 		 javalin.get("/oauth2", ctx -> {
 			 String discordAuthCode = ctx.queryParam("code");
+			 System.out.println(discordAuthCode);
 			 JsonObject document = discordRequestHandler.requestAccessToken(discordAuthCode);
-			 System.out.println(document);
 			 if (document.has("access_token")) {
 				 String access_token = document.get("access_token").getAsString();
 				 JsonObject userInfo = discordRequestHandler.requestUserInfo(access_token);
@@ -79,10 +100,10 @@ public class WebApp {
 
 				 UserModel model = bot.getDatabaseAccessor().getUserRepository().findByUserId(idLong);
 				 if (model == null) {
-				 	model = UserModel.builder()
+					 model = UserModel.builder()
 							 .userId(idLong)
 							 .cachedName(user.get("username").getAsString())
-							 .cachedDiscriminator(user.get("3313").getAsString())
+							 .cachedDiscriminator(user.get("discriminator").getAsString())
 							 .build();
 				 }
 
@@ -103,7 +124,7 @@ public class WebApp {
 				 return;
 			 }
 			 ctx.redirect("/");
-		 });
+		 }, Role.ANYONE);
 
 		 javalin.get("/api/session", ctx -> {
 			 UserModel model = discordSessionHandler.fetchUserByToken(ctx.cookie("token"));
@@ -112,13 +133,41 @@ public class WebApp {
 			 document.put("name", new BsonString(model.getCachedName()));
 			 document.put("discriminator", new BsonString(model.getCachedDiscriminator()));
 			 ctx.json(document.toString());
-		 });
+		 }, Role.LOGGED_IN);
 		javalin.get("/api/guilds", ctx -> {
 			String token = ctx.cookie("token");
-			UserModel model = discordSessionHandler.fetchUserByToken(token);
-			if (model == null) return;
-			ctx.json(discordRequestHandler.requestUserGuilds(token).toString());
-		});
+			if (!discordSessionHandler.isTokenValid(token)) return;
+
+			JsonArray guilds = discordRequestHandler.requestUserGuilds(token);
+			System.out.println(guilds);
+			JsonArray arrayJoined = new JsonArray();
+			JsonArray arrayNotJoined = new JsonArray();
+			List<JsonElement> list = guilds.asList().stream().filter(jsonElement -> {
+				JsonObject guild = jsonElement.getAsJsonObject();
+				String permissions = guild.get("permissions").getAsString();
+				for (Permission permission : Permission.getPermissions(Long.parseLong(permissions))) {
+					if (permission == Permission.ADMINISTRATOR || permission == Permission.MANAGE_SERVER) {
+						guild.addProperty("botJoined", bot.getJda().getGuildById(guild.get("id").getAsString()) != null);
+						return true;
+					}
+				}
+				return false;
+			}).sorted(Comparator.comparing(o -> o.getAsJsonObject().get("name").getAsString())).collect(Collectors.toList());
+
+			for (JsonElement element : list) {
+				JsonObject guild = element.getAsJsonObject();
+				boolean joined = guild.get("botJoined").getAsBoolean();
+				System.out.println(joined);
+				if (joined) {
+					arrayJoined.add(element);
+				} else {
+					arrayNotJoined.add(element);
+				}
+			}
+
+			arrayJoined.addAll(arrayNotJoined);
+			ctx.json(arrayJoined.toString());
+		}, Role.LOGGED_IN);
 
 		Runtime.getRuntime().addShutdownHook(new Thread(javalin::stop));
 	}

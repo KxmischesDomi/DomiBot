@@ -1,4 +1,5 @@
 <template id="dashboard">
+  <a href="/logout">Logout</a>
 
   <h1>Logged in as {{ this.session.name }}#{{ this.session.discriminator }}</h1>
 
@@ -24,17 +25,12 @@ app.component("dashboard", {
     fetch("/api/session")
     .then(res => res.json())
     .then(res => this.session = res)
-    .catch(reason => alert("Error while fetching session "  + reason));
     fetch("/api/guilds")
         .then(res => res.json())
         .then(res => this.guilds = res)
-        .catch(reason => alert("Error while fetching session "  + reason))
   }
-
 });
 </script>
 <style>
-
-
 
 </style>

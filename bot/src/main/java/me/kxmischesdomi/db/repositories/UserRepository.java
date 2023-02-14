@@ -29,6 +29,7 @@ public class UserRepository extends Repository<UserModel> {
 
     public UserModel findByAccessToken(String accessToken) {
         return this.createQuery()
+                .filter(Filters.exists("webClientModel"))
                 .filter(Filters.eq("webClientModel.accessToken", accessToken))
                 .first();
     }

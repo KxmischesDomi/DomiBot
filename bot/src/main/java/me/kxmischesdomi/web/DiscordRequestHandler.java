@@ -1,7 +1,10 @@
 package me.kxmischesdomi.web;
 
+import com.google.common.cache.Cache;
+import com.google.common.cache.CacheBuilder;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
+import lombok.Getter;
 import lombok.SneakyThrows;
 import me.kxmischesdomi.config.Config;
 import org.apache.http.HttpResponse;
@@ -14,15 +17,20 @@ import org.apache.http.message.BasicNameValuePair;
 import java.io.UnsupportedEncodingException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.concurrent.TimeUnit;
 
 /**
  * @author KxmischesDomi | https://github.com/kxmischesdomi
  * @since 1.0
  */
-public record DiscordRequestHandler(RequestHandler requestHandler,
-									Config config) {
+public record DiscordRequestHandler(RequestHandler requestHandler, Config config) {
 
-	private static final String apiEndpoint = "https://discord.com/api";
+	private static final String apiEndpoint = "https://discord.com/api/v10";
+
+	@Getter
+	private static final Cache<String, JsonArray> userGuildsCache = CacheBuilder.newBuilder()
+			.expireAfterWrite(20, TimeUnit.SECONDS)
+			.build();
 
 	public JsonObject requestUserInfo(String token) {
 		HttpGet httpGet = new HttpGet(apiEndpoint + "/oauth2/@me");
@@ -31,9 +39,13 @@ public record DiscordRequestHandler(RequestHandler requestHandler,
 	}
 
 	public JsonArray requestUserGuilds(String token) {
+		JsonArray cache = userGuildsCache.getIfPresent(token);
+		if (cache != null) return cache;
 		HttpGet httpGet = new HttpGet(apiEndpoint + "/users/@me/guilds");
 		httpGet.setHeader("Authorization", "Bearer " + token);
-		return requestHandler.readResponseAsArray(requestHandler.executeRequest(httpGet));
+		JsonArray guilds = requestHandler.readResponseAsArray(requestHandler.executeRequest(httpGet));
+		userGuildsCache.put(token, guilds);
+		return guilds;
 	}
 
 	@SneakyThrows
@@ -71,8 +83,9 @@ public record DiscordRequestHandler(RequestHandler requestHandler,
 		httpPost.setEntity(entity);
 		httpPost.setHeader("Content-Type", "application/x-www-form-urlencoded");
 
+		System.out.println(httpPost);
 		HttpResponse httpResponse = requestHandler.executeRequest(httpPost);
-
+		System.out.println(httpResponse);
 		return requestHandler.readResponseAsDocument(httpResponse);
 	}
 

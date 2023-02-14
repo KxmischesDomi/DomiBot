@@ -5,7 +5,6 @@ import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
 import lombok.SneakyThrows;
 import org.apache.http.HttpResponse;
-import org.apache.http.client.HttpClient;
 import org.apache.http.client.methods.HttpUriRequest;
 import org.apache.http.impl.client.HttpClientBuilder;
 
@@ -17,15 +16,18 @@ import java.io.InputStreamReader;
  * @author KxmischesDomi | https://github.com/kxmischesdomi
  * @since 1.0
  */
-public record RequestHandler(HttpClient httpClient, Gson gson) {
+public record RequestHandler(Gson gson) {
 
 	public RequestHandler() {
-		this(HttpClientBuilder.create().build(), new Gson());
+		this(new Gson());
 	}
 
 	@SneakyThrows
 	public HttpResponse executeRequest(HttpUriRequest request) {
-		return httpClient.execute(request);
+		System.out.println("requesting... " + request);
+		HttpResponse execute = HttpClientBuilder.create().build().execute(request);
+		System.out.println("got response.");
+		return execute;
 	}
 
 	public JsonObject readResponseAsDocument(HttpResponse response) {

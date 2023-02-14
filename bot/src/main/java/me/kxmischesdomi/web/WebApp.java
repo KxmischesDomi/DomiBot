@@ -69,7 +69,6 @@ public class WebApp {
 							 .cachedName(user.getString("username").getValue())
 							 .cachedDiscriminator(user.getString("3313").getValue())
 							 .build();
-					 bot.getDatabaseAccessor().getUserRepository().save(model);
 				 }
 
 				 if (model.getWebClientModel() == null) model.setWebClientModel(new WebClientModel());
@@ -79,7 +78,9 @@ public class WebApp {
 				 clientModel.setRefreshToken(document.getString("refresh_token").getValue());
 				 String scope = document.getString("scope").getValue();
 				 clientModel.setScopes(scope.split(" "));
-				 clientModel.setTokenResetMillis(System.currentTimeMillis() + document.getInt32("expires_in").getValue() * 1000);
+				 clientModel.setTokenResetMillis(System.currentTimeMillis() + document.getInt32("expires_in").getValue() * 1000L);
+
+				 bot.getDatabaseAccessor().getUserRepository().save(model);
 
 				 ctx.redirect("/dashboard");
 				 return;

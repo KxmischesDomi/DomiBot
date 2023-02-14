@@ -5,12 +5,13 @@ website: "https://kxmischesdomi.me"
 invite: "https://discord.com/api/oauth2/authorize?client_id=CLIENT_ID&permissions=8&scope=bot"
 applicationId: "ID"
 applicationSecret: "ID"
+applicationOAuth2: "https://discord.com/api/oauth2/authorize?client_id=CLIENT_ID&redirect_uri=http%3A%2F%2F127.0.0.1%3A8080%2Foauth2&response_type=code&scope=identify%20guilds"
 token: "SECRET"
 
 webConfig:
-  host: "127.0.01"
-  port: 7070
-  accessTokenRedirect: "http://localhost:8080/login"
+  host: "127.0.0.1"
+  port: 8080
+  accessTokenRedirect: "http://127.0.0.1:8080/dashboard/"
 
 morphiaConfig:
   host: "127.0.0.1"

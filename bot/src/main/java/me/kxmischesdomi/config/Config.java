@@ -19,6 +19,7 @@ public final class Config {
 	private String invite;
 	private String applicationId;
 	private String applicationSecret;
+	private String applicationOAuth2;
 	private String token;
 	private WebConfig webConfig;
 	private MorphiaConfig morphiaConfig;

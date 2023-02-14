@@ -1,11 +1,13 @@
 package me.kxmischesdomi.web;
 
+import com.google.gson.Gson;
+import com.google.gson.JsonArray;
+import com.google.gson.JsonObject;
 import lombok.SneakyThrows;
 import org.apache.http.HttpResponse;
 import org.apache.http.client.HttpClient;
 import org.apache.http.client.methods.HttpUriRequest;
 import org.apache.http.impl.client.HttpClientBuilder;
-import org.bson.BsonDocument;
 
 import java.io.BufferedReader;
 import java.io.InputStream;
@@ -15,12 +17,10 @@ import java.io.InputStreamReader;
  * @author KxmischesDomi | https://github.com/kxmischesdomi
  * @since 1.0
  */
-public class RequestHandler {
-
-	private final HttpClient httpClient;
+public record RequestHandler(HttpClient httpClient, Gson gson) {
 
 	public RequestHandler() {
-		httpClient = HttpClientBuilder.create().build();
+		this(HttpClientBuilder.create().build(), new Gson());
 	}
 
 	@SneakyThrows
@@ -28,23 +28,26 @@ public class RequestHandler {
 		return httpClient.execute(request);
 	}
 
-	public BsonDocument readResponse(HttpResponse response) {
-		try {
-			InputStream inputStream = response.getEntity().getContent();
-			InputStreamReader inputStreamReader = new InputStreamReader(inputStream);
-			BufferedReader bufferedReader = new BufferedReader(inputStreamReader);
-			StringBuilder stringBuilder = new StringBuilder();
-			String bufferedStrChunk = null;
-			while((bufferedStrChunk = bufferedReader.readLine()) != null){
-				stringBuilder.append(bufferedStrChunk);
-			}
+	public JsonObject readResponseAsDocument(HttpResponse response) {
+		return gson.fromJson(readResponse(response), JsonObject.class);
+	}
 
-			return BsonDocument.parse(stringBuilder.toString());
-		} catch (Exception exception) {
-			exception.printStackTrace();
+	public JsonArray readResponseAsArray(HttpResponse response) {
+		return gson.fromJson(readResponse(response), JsonArray.class);
+	}
+
+	@SneakyThrows
+	public String readResponse(HttpResponse response) {
+		InputStream inputStream = response.getEntity().getContent();
+		InputStreamReader inputStreamReader = new InputStreamReader(inputStream);
+		BufferedReader bufferedReader = new BufferedReader(inputStreamReader);
+		StringBuilder stringBuilder = new StringBuilder();
+		String bufferedStrChunk = null;
+		while((bufferedStrChunk = bufferedReader.readLine()) != null){
+			stringBuilder.append(bufferedStrChunk);
 		}
-		return new BsonDocument();
 
+		return stringBuilder.toString();
 	}
 
 }

@@ -25,7 +25,9 @@ public class ConfigLoader {
 		Yaml yaml = new Yaml(constructor);
 
 		FileInputStream io = new FileInputStream(configFile);
-		return yaml.load(io);
+		Config config = yaml.load(io);
+		config.setDev(devEnvironment);
+		return config;
 	}
 
 	public File loadConfigFile() throws Exception {

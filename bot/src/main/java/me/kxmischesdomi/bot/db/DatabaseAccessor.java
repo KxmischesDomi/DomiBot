@@ -1,10 +1,7 @@
 package me.kxmischesdomi.bot.db;
 
 import lombok.Getter;
-import me.kxmischesdomi.db.models.GuildModel;
-import me.kxmischesdomi.db.models.LevelingModel;
-import me.kxmischesdomi.db.models.MemberModel;
-import me.kxmischesdomi.db.models.UserModel;
+import me.kxmischesdomi.db.models.*;
 import me.kxmischesdomi.db.repositories.GuildRepository;
 import me.kxmischesdomi.db.repositories.MemberRepository;
 import me.kxmischesdomi.db.repositories.UserRepository;
@@ -46,6 +43,7 @@ public class DatabaseAccessor {
 					.cachedDiscriminator(user.getDiscriminator())
 					.cachedAvatarURL(user.getAvatarUrl())
 					.userLevelingProfile(new LevelingModel())
+					.webClientModel(new WebClientModel())
 					.build();
 			userRepository.save(userModel);
 		} else if (updateUserInformation(userModel, user)) {

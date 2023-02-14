@@ -1,6 +1,6 @@
 package me.kxmischesdomi.bot.modules.leveling;
 
-import me.kxmischesdomi.bot.DomiBot;
+import me.kxmischesdomi.DomiBot;
 import me.kxmischesdomi.bot.modules.base.IModule;
 import xyz.juliandev.easy.annotations.Inject;
 

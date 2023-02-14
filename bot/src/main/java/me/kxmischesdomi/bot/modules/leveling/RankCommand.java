@@ -1,6 +1,6 @@
 package me.kxmischesdomi.bot.modules.leveling;
 
-import me.kxmischesdomi.bot.DomiBot;
+import me.kxmischesdomi.DomiBot;
 import me.kxmischesdomi.bot.base.CommandProvider;
 import me.kxmischesdomi.bot.db.DatabaseAccessor;
 import me.kxmischesdomi.db.models.LevelingModel;

@@ -1,6 +1,6 @@
 package me.kxmischesdomi.bot.modules.generic;
 
-import me.kxmischesdomi.bot.DomiBot;
+import me.kxmischesdomi.DomiBot;
 import me.kxmischesdomi.bot.base.CommandProvider;
 import net.dv8tion.jda.api.EmbedBuilder;
 import net.dv8tion.jda.api.entities.Guild;

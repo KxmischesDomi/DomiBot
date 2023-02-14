@@ -7,6 +7,7 @@ import net.dv8tion.jda.api.events.session.ReadyEvent;
 import net.dv8tion.jda.api.hooks.ListenerAdapter;
 import net.dv8tion.jda.api.interactions.commands.build.CommandData;
 import org.jetbrains.annotations.NotNull;
+import xyz.juliandev.easy.annotations.Inject;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -22,6 +23,7 @@ public class CommandExecutor extends ListenerAdapter {
 	private final Map<String, CommandProvider> commands;
 	private final Map<String, CommandData> commandDataCache;
 
+	@Inject
 	public CommandExecutor(JDA jda) {
 		this.jda = jda;
 		commands = new ConcurrentHashMap<>();

@@ -32,6 +32,8 @@ public class UserModel extends Model {
 
     private LevelingModel userLevelingProfile;
 
+    private WebClientModel webClientModel;
+
     @PrePersist
     public void prePersist() {
         super.prePersist();

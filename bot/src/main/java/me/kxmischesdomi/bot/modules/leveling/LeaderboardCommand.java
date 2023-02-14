@@ -5,7 +5,7 @@ import dev.morphia.query.MorphiaCursor;
 import dev.morphia.query.Query;
 import dev.morphia.query.Sort;
 import dev.morphia.query.filters.Filters;
-import me.kxmischesdomi.bot.DomiBot;
+import me.kxmischesdomi.DomiBot;
 import me.kxmischesdomi.bot.base.CommandProvider;
 import me.kxmischesdomi.bot.db.DatabaseAccessor;
 import me.kxmischesdomi.db.models.LevelingModel;

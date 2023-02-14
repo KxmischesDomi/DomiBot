@@ -2,8 +2,15 @@
 version: "1.0"
 support: "https://discord.gg/v6zzCk8"
 website: "https://kxmischesdomi.me"
-invite: "https://discord.com/api/oauth2/authorize?client_id=1074725355048423516&permissions=8&scope=bot"
+invite: "https://discord.com/api/oauth2/authorize?client_id=CLIENT_ID&permissions=8&scope=bot"
+applicationId: "ID"
+applicationSecret: "ID"
 token: "SECRET"
+
+webConfig:
+  host: "127.0.01"
+  port: 7070
+  accessTokenRedirect: "http://localhost:8080/login"
 
 morphiaConfig:
   host: "127.0.0.1"

@@ -123,3 +123,4 @@ buildNumber.properties
 
 artifacts/
 bot/src/main/resources/dev-config.yml
+package-lock.json

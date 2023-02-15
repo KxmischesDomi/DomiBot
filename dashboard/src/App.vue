@@ -2,12 +2,12 @@
 import Navbar from "./components/Navbar.vue";
 </script>
 
-<template>
+<template id="app">
   <Navbar />
 
-<!--  <RouterView />-->
+  <RouterView />
 </template>
 
-<style scoped>
-
+<style lang="scss">
+@use "src/assets/theme.scss";
 </style>
